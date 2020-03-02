@@ -10,12 +10,19 @@
 // Allocates the pid map.
 int allocate_map(void)
 {
-    for(int index = 0; index <= PID_MAX - PID_MIN; index++)
+    int retval = 1;
+
+    // Init mutex lock
+    if(pthread_mutex_init(&mutex) == 0)
     {
-        pid_map = 0;
+        for(int index = 0; index <= PID_MAX - PID_MIN; index++)
+        {
+            pid_map = 0;
+        }
+        retval = 0;
     }
 
-    return 0;
+    return retval;
 }
 
 // Allocates a pid
