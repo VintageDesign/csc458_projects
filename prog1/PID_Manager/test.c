@@ -38,9 +38,9 @@ void *allocator(void *param)
          printf("No pid available\n");
       else {
          /* indicate in the in_use map the pid is in use */
-		
+
          /* sleep for a random period of time */
-         
+
          /* release the pid */
 
       }

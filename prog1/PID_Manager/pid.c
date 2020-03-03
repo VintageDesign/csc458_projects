@@ -34,7 +34,7 @@ int allocate_map(void)
 int allocate_pid(void)
 {
     /* local variables */
-    int retval = -1;
+    int retval = 1;
     int temp = -1;
 
     /* acquire the mutex lock and warn if unable */

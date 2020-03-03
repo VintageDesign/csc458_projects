@@ -23,7 +23,7 @@ int allocate_map(void);
  * @brief Finds the next available PID, marks it as 'in use' and returns the value
  * EX: pid_map[300] is set as 1 if pid 300 is in use.
  *
- * @returns retval  -1 if failed, PID_val if sucsessful
+ * @returns retval  1 if failed, PID_val if sucsessful
  *****************************************************************************/
 int allocate_pid(void);
 
