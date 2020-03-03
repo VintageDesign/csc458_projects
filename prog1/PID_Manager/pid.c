@@ -15,10 +15,15 @@ int allocate_map(void)
     // Init mutex lock
     if(pthread_mutex_init(&mutex) == 0)
     {
+        pthread_mutex_lock(&mutex);
+
         for(int index = 0; index <= PID_MAX - PID_MIN; index++)
         {
             pid_map = 0;
         }
+
+        pthread_mutex_release(&mutex);
+
         retval = 0;
     }
 
