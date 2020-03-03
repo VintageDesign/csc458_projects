@@ -24,50 +24,74 @@ int in_use[PID_MAX + 1];
  */
 pthread_mutex_t test_mutex;
 
+
+
+// Thread code
 void *allocator(void *param)
 {
-   int i, pid;
+    int i, pid;
 
-   for (i = 0; i < ITERATIONS; i++) {
-      /* sleep for a random period of time */
-		sleep((int)(random() % SLEEP));
+    for (i = 0; i < ITERATIONS; i++) {
+        /* sleep for a random period of time */
+        sleep((int)(random() % SLEEP));
 
-      /* allocate a pid */
+        /* allocate a pid */
+        pid = allocate_pid();
 
-      if (pid == -1)
-         printf("No pid available\n");
-      else {
-         /* indicate in the in_use map the pid is in use */
+        if (pid == 1)
+            printf("No pid available\n");
+        else {
+            /* indicate in the in_use map the pid is in use */
+            pthread_mutex_lock(&test_mutex);
 
-         /* sleep for a random period of time */
+            in_use[pid] = 1;
 
-         /* release the pid */
+            pthread_mutex_unlock(&test_mutex);
 
-      }
-   }
+            /* sleep for a random period of time */
+            sleep((int)(random() % SLEEP));
+
+            /* unlock the pid */
+            pthread_mutex_lock(&test_mutex);
+
+            in_use[pid] = 0;
+
+            pthread_mutex_unlock(&test_mutex);
+
+            release_pid(pid);
+
+        }
+    }
 }
 
 int main(void)
 {
-   int i;
-   pthread_t tids[NUM_THREADS];
+    int i;
+    pthread_t tids[NUM_THREADS];
+    pthread_mutex_init(&test_mutex, NULL);
 
-   for (i = 0; i <= PID_MAX; i++) {
-      in_use[i] = 0;
-   }
+    for (i = 0; i <= PID_MAX; i++) {
+        in_use[i] = 0;
+    }
 
 
-   /* allocate the pid map */
-   if (allocate_map() == -1)
-      return -1;
+    /* allocate the pid map */
+    if (allocate_map() == -1)
+        return -1;
 
-   srandom((unsigned)time(NULL));
+    srandom((unsigned)time(NULL));
 
-   /* create the threads */
+    /* create the threads */
+    for(int index = 0; index < NUM_THREADS; index++)
+    {
+        // Pointer math sucks and should never be used *uses pointer math*
+        pthread_create(tids + index, NULL, allocator, NULL);
+    }
 
-   /* join the threads */
+    /* join the threads */
+    pthread_exit(NULL);
 
-   /* test is finished */
+    /* test is finished */
 
-   return 0;
+    return 0;
 }
