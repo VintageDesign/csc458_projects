@@ -12,7 +12,7 @@
 #include <time.h>
 #include "pid.h"
 
-#define NUM_THREADS 100
+#define NUM_THREADS 10
 #define ITERATIONS   10
 #define SLEEP         5
 
@@ -89,6 +89,11 @@ int main(void)
     }
 
     /* join the threads */
+    for(int index = 0; index < NUM_THREADS; index++)
+    {
+        // Pointer math sucks and should never be used *uses pointer math*
+        pthread_join(tids[index], NULL);
+    }
     pthread_exit(NULL);
 
     /* test is finished */

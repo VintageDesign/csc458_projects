@@ -15,14 +15,16 @@ int allocate_map(void)
     // Init mutex lock
     if(pthread_mutex_init(&mutex, NULL) == 0)
     {
-        pthread_mutex_lock(&mutex);
+        if(pthread_mutex_lock(&mutex) != 0)
+            printf("Couldnt get mutex lock");
 
         for(int index = 0; index <= PID_MAX - PID_MIN; index++)
         {
             pid_map[index] = 0;
         }
 
-        pthread_mutex_unlock(&mutex);
+        if(pthread_mutex_unlock(&mutex) != 0)
+            printf("Couldnt release mutex lock");
 
         retval = 0;
     }
@@ -38,8 +40,8 @@ int allocate_pid(void)
     int temp = -1;
 
     /* acquire the mutex lock and warn if unable */
-    //TODO warn if not unlockd
-    pthread_mutex_lock(&mutex);
+    if(pthread_mutex_lock(&mutex) != 0)
+        printf("Couldnt get mutex lock");
 
     /* find the next available pid */
     for( int index = 1; index <= PID_MAX - PID_MIN; index++)
@@ -54,8 +56,8 @@ int allocate_pid(void)
     }
 
     /* unlock and warn if the mutex was not unlockd */
-    //TODO warn if not unlockd
-    pthread_mutex_unlock(&mutex);
+    if(pthread_mutex_unlock(&mutex) != 0)
+        printf("Couldnt release mutex lock");
 
     printf("Allocated PID: %d\n", retval);
 
@@ -66,14 +68,14 @@ int allocate_pid(void)
 void release_pid(int pid)
 {
     /* acquire the mutex lock and warn if unable */
-    //TODO warn if not unlockd
-    pthread_mutex_lock(&mutex);
+    if(pthread_mutex_lock(&mutex) != 0)
+        printf("Couldnt get mutex lock");
 
     pid_map[pid - PID_MIN] = 0;
 
     /* unlock and warn if the mutex was not unlockd  */
-    //TODO warn if not unlockd
-    pthread_mutex_unlock(&mutex);
+    if(pthread_mutex_unlock(&mutex) != 0)
+        printf("Couldnt release mutex lock");
     printf("Released PID: %d\n", pid);
 
     return;
