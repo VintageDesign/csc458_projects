@@ -14,46 +14,53 @@ pthread_t students[NUM_OF_STUDENTS];
  */
 void init()
 {
-   if (  )
-      printf("%s\n",strerror(errno));
+    // Init the seats semaphore
+    if (sem_init(&seats, 0, 0))
+        printf("error init students_sem\n");
+    if (sem_init(&ta_semaphore, 0, 0))
+        printf("%s\n",strerror(errno));
 
-   if (  )
-      printf("error init students_sem\n"); 
-	
-   if (  )
-      printf("error init ta\n");
 
-   for (i = 0; i < NUM_OF_STUDENTS; i++)
-      student_id[i] = i;
+
+    // Init the office mutex
+    if (pthread_mutex_init(&seat_count, NULL))
+        printf("error init ta\n");
+
+    // Assign student IDs
+    for (int i = 0; i < NUM_OF_STUDENTS; i++)
+        student_id[i] = i;
 }
 
 void create_students()
 {
 
-   for (i = 0; i < NUM_OF_STUDENTS; i++) {
-
-   }
+    for (int i = 0; i < NUM_OF_STUDENTS; i++) {
+        pthread_create(&students[i], 0, student_loop, (void *) &student_id[i]);
+    }
 }
 
 void create_ta()
 {
 
+    pthread_create(&ta, 0, ta_loop, NULL);
+
 }
 
 int main(void)
 {
-int i;
+    int i;
 
-   init();
-   create_ta();
-   create_students();
+    init();
+    create_ta();
+    create_students();
 
-   for (i = 0; i < NUM_OF_STUDENTS; i++)
+    for (i = 0; i < NUM_OF_STUDENTS; i++)
+        pthread_join(students[i], NULL);
 
-   /* when all students have finished, we will cancel the TA thread */	
-   if (pthread_cancel(ta) != 0)
-      printf("%s\n",strerror(errno));
+    /* when all students have finished, we will cancel the TA thread */
+    if (pthread_cancel(ta) != 0)
+        printf("%s\n",strerror(errno));
 
-   return 0;
+    return 0;
 }
 
