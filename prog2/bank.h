@@ -16,3 +16,5 @@ int need[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES];
 
 
 int safe_check(int customer_number, int request[]);
+int check_work(int work[], int req[]);
+int check_max(int work[], int req[], int max[]);
