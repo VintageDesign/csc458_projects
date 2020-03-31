@@ -4,6 +4,7 @@ int safe_check(int customer_number, int request[])
 {
     int retval = -1;
 
+    int finished[NUMBER_OF_CUSTOMERS];
     int work[NUMBER_OF_RESOURCES];
     int alloc_copy[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES];
     int need_copy[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES];
@@ -19,13 +20,14 @@ int safe_check(int customer_number, int request[])
                 = allocation[customer_idx][resource_idx];
             need_copy[customer_idx][resource_idx]
                 = need[customer_idx][resource_idx];
+            finished[customer_idx] = 0;
         }
         work[resource_idx] = available[resource_idx];
     }
 
-    if(check_work(work, request))
+    if(check_work(work, request) == 0)
     {
-        if(check_max(maximum, request, alloc_copy[customer_number]))
+        if(check_max(maximum[customer_number], request, alloc_copy[customer_number]) == 0)
         {
             for(int index = 0; index < NUMBER_OF_RESOURCES; index++)
             {
@@ -33,6 +35,9 @@ int safe_check(int customer_number, int request[])
                 need_copy[customer_number][index]  -= request[index];
                 alloc_copy[customer_number][index] += request[index];
             }
+
+
+
         }
     }
 

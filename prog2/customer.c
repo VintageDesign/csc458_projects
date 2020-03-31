@@ -10,8 +10,8 @@ int request_resource(int customer_number, int request[])
         for (int index = 0; index < NUMBER_OF_RESOURCES; index++)
         {
             available[index]  -= request[index];
-            allocation[index] += request[index];
-            need[index]       -= request[index];
+            allocation[customer_number][index] += request[index];
+            need[customer_number][index]       -= request[index];
         }
         retval = 0;
     }
@@ -25,9 +25,9 @@ int release_request(int customer_number, int release[])
 
     for (int index = 0; index < NUMBER_OF_RESOURCES; index++)
     {
-        available[index]  -= request[index];
-        allocation[index] += request[index];
-        need[index]       -= request[index];
+        available[index]  -= release[index];
+        allocation[customer_number][index] += release[index];
+        need[customer_number][index]       -= release[index];
     }
 
     return retval;
