@@ -5,8 +5,9 @@ int request_resource(int customer_number, int request[])
 {
     int retval = -1;
 
-    if (safe_check(customer_number, request))
+    if (safe_check(customer_number, request) == 1)
     {
+            printf("Safe, Request Granted\n");
         for (int index = 0; index < NUMBER_OF_RESOURCES; index++)
         {
             available[index]  -= request[index];
@@ -15,19 +16,21 @@ int request_resource(int customer_number, int request[])
         }
         retval = 0;
     }
+    else
+        printf("Request Denied\n");
 
     return retval;
 }
 
-int release_request(int customer_number, int release[])
+int release_resource(int customer_number, int release[])
 {
     int retval = 0;
 
     for (int index = 0; index < NUMBER_OF_RESOURCES; index++)
     {
-        available[index]  -= release[index];
-        allocation[customer_number][index] += release[index];
-        need[customer_number][index]       -= release[index];
+        available[index]  += release[index];
+        allocation[customer_number][index] -= release[index];
+        need[customer_number][index]       += release[index];
     }
 
     return retval;

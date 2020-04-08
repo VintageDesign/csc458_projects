@@ -6,11 +6,13 @@ OBJ = main.o
 OBJ += customer.o
 OBJ += bank.o
 
+LDLIBS = -lpthread
+
 %.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -g -c -o $@ $< $(CFLAGS)
 
 bankers: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC)  -o $@ $^ $(CFLAGS) $(LDLIBS)
 
 clean:
 	rm -f *.o bankers
